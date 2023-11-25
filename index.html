@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Masai Doctor Records</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        form input,
+        form select,
+        form button {
+            margin-bottom: 10px;
+            padding: 5px;
+            width: 200px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        td button {
+            background-color: #f44336;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        select {
+            width: 100%;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+<form id="doctorForm">
+    <input placeholder="Name" type="text" id="name" required>
+    <input placeholder="Doctor ID" type="text" id="doctor_id" required>
+    <select id="specialization" required>
+        <option value="" disabled selected>Select Specialization</option>
+        <option value="Dermatologist">Dermatologist</option>
+        <option value="Dentist">Dentist</option>
+        <option value="Gynecologist">Gynecologist</option>
+    </select>
+    <input placeholder="Experience" type="number" id="experience" required>
+    <input placeholder="Email" type="email" id="email" required>
+    <input placeholder="Mobile No." type="number" id="mobile" required>
+    <button type="submit">Submit</button>
+</form>
+<select id="filter">
+    <option value="">Select Specialization</option>
+    <option value="Dermatologist">Dermatologist</option>
+    <option value="Dentist">Dentist</option>
+    <option value="Gynecologist">Gynecologist</option>
+</select>
+
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Doctor ID</th>
+            <th>Specialization</th>
+            <th>Experience in Years</th>
+            <th>Email</th>
+            <th>Mobile No</th>
+            <th>Role</th>
+            <th>Delete</th>
+        </tr>
+    </thead>
+    <tbody id="doctorTableBody">
+    </tbody>
+</table>
+
+<script>
+    document.getElementById("doctorForm").addEventListener("submit", function (event) {
+        event.preventDefault();
+        var name = document.getElementById("name").value;
+        var doctorId = document.getElementById("doctor_id").value;
+        var specialization = document.getElementById("specialization").value;
+        var experience = document.getElementById("experience").value;
+        var email = document.getElementById("email").value;
+        var mobile = document.getElementById("mobile").value;
+        var role = "";
+        if (experience > 5) {
+            role = "Senior";
+        } else if (experience >= 2 && experience <= 5) {
+            role = "Junior";
+        } else {
+            role = "Trainee";
+        }
+        var tableBody = document.getElementById("doctorTableBody");
+        var newRow = tableBody.insertRow();
+        newRow.innerHTML = `
+          <td>${name}</td>
+          <td>${doctorId}</td>
+          <td>${specialization}</td>
+          <td>${experience}</td>
+          <td>${email}</td>
+          <td>${mobile}</td>
+          <td>${role}</td>
+          <td><button onclick="deleteRow(this)">Delete</button></td>
+        `;
+        document.getElementById("doctorForm").reset();
+    });
+
+    function deleteRow(button) {
+        var row = button.parentNode.parentNode;
+        row.parentNode.removeChild(row);
+    }
+    document.getElementById("filter").addEventListener("change", function () {
+        var selectedSpecialization = this.value;
+        var tableRows = document.getElementById("doctorTableBody").getElementsByTagName("tr");
+
+        for (var i = 0; i < tableRows.length; i++) {
+            var currentSpecialization = tableRows[i].getElementsByTagName("td")[2].innerText;
+
+            if (selectedSpecialization === "" || currentSpecialization === selectedSpecialization) {
+                tableRows[i].style.display = "";
+            } else {
+                tableRows[i].style.display = "none";
+            }
+        }
+    });
+</script>
+</body>
+</html>
